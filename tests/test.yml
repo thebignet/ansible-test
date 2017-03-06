@@ -12,7 +12,4 @@
     - name: "Say hello to my new containers"
       ping:
 
-- name: Run ambari agent
-  hosts: docker_containers
-  roles:
-  - role: ambariagent
+- include: '../pb_provision_env.yml'

@@ -1,0 +1,12 @@
+---
+- include: pb_provision_env.yml
+
+- include: pb_directory_services.yml
+
+- include: pb_ssl_certificates.yml
+
+- include: pb_ambari_setup.yml
+
+- include: pb_ambari_blueprint_cluster.yml
+
+- include: pb_ambari_kerberise_cluster.yml
