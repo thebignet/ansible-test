@@ -15,4 +15,4 @@
 - name: Run ambari agent
   hosts: docker_containers
   roles:
-  - role: ambari-agent
+  - role: ambariagent
