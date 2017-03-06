@@ -11,3 +11,8 @@
   tasks:
     - name: "Say hello to my new containers"
       ping:
+
+- name: Run ambari agent
+  hosts: docker_containers
+  roles:
+  - role: ambari-agent

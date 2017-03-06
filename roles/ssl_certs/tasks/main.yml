@@ -1,0 +1,4 @@
+---
+- name: include certs tasks when we have some ssl services
+  include: gen_certs.yml
+  when: ssl_services != "" 

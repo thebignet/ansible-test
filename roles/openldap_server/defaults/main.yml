@@ -1,0 +1,9 @@
+---
+ldif_folder: /etc/openldap/ldif
+ldif_files:
+  - dn.ldif
+  - ou.ldif
+  - users.ldif
+  - groups.ldif
+olc_database_file: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}bdb.ldif'
+olc_database_file_cent7: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}hdb.ldif'

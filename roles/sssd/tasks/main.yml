@@ -1,0 +1,44 @@
+---
+- name: include ldap config
+  include_vars: vars/ldap_config
+
+- name: install required packages for sssd
+  yum: name="{{ item }}" state=present
+  sudo: yes
+  with_items:
+    - sssd-client
+    - sssd-common
+    - sssd-common-pac
+    - sssd-krb5
+    - sssd-ldap
+    - sssd-proxy
+    - python-sssdconfig
+    - authconfig
+    - authconfig-gtk
+
+- name: run authconfig to configure sssd
+  shell: >
+    authconfig --enablesssd --enablesssdauth --enablelocauthorize --enableldap --enablekrb5
+    --ldapserver=ldap://{{ groups[cluster_name+'_directoryservices'][0] }}:389 --disableldaptls
+    --ldapbasedn={{ olcSuffix }} --enablemkhomedir --enablecachecreds --update
+    --krb5kdc={{ groups[cluster_name+'_directoryservices'][0] }} --krb5adminserver={{ groups[cluster_name+'_directoryservices'][0] }}
+    --krb5realm={{ krb_realm }}
+  args:
+    creates: /etc/sssd/sssd.conf
+  sudo: yes
+  register: authconf
+
+- name: change schema version
+  lineinfile: dest=/etc/sssd/sssd.conf regexp='^ldap_schema' line='ldap_schema = rfc2307'
+  sudo: yes
+  register: schemachange
+
+- name: remove cache db file
+  file: path=/var/lib/sss/db/cache_default.ldb state=absent
+  sudo: yes
+  when: authconf.changed or schemachange.changed
+
+- name: restart sssd for changes to come into effect
+  service: name=sssd state=restarted enabled=yes
+  when: authconf.changed or schemachange.changed
+  sudo: yes
