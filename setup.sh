@@ -2,7 +2,7 @@
 
 echo "### install docker ###"
 
-source ./proxy.sh
+#source ./proxy.sh
 
 yum install -y yum-utils
 
